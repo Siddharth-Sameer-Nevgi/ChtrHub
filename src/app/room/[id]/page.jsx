@@ -23,7 +23,7 @@ export default function RoomPage({ params }) {
   const bottom = useRef(null);
 
   useEffect(() => {
-    socket = io("https://318rkskl-3002.inc1.devtunnels.ms", {
+    socket = io(process.env.SERVER_URL, {
       withCredentials: true,
     });
     socket.emit("joinRoom", { roomID: id, username });
