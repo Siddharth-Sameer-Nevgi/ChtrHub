@@ -24,6 +24,7 @@ export default function RoomPage({ params }) {
 
   useEffect(() => {
     socket = io(process.env.SERVER_URL, {
+      transports: ["websocket"],
       withCredentials: true,
     });
     socket.emit("joinRoom", { roomID: id, username });
