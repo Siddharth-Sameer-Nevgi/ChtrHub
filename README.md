@@ -1,4 +1,4 @@
-# 🚀 ChtrHub - Next.js Chat & Collaboration Platform
+# 🚀 ChtrHub - Next.js Chatting Platform
 
 
 A modern real-time chat application built with Next.js, featuring secure authentication and seamless collaboration.
