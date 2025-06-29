@@ -23,7 +23,8 @@ export default function RoomPage({ params }) {
   const bottom = useRef(null);
 
   useEffect(() => {
-    socket = io("https://socketio-5zyq.onrender.com/", {
+    socket = io("https://socketio-5zyq.onrender.com", {
+      transports: ["websocket"],
       withCredentials: true,
     });
     socket.emit("joinRoom", { roomID: id, username });

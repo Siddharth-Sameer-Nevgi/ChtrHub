@@ -32,12 +32,12 @@ export default function Navbar() {
       <div className={styles.navLeft}>
         <img
           src="https://www.shutterstock.com/image-vector/support-icon-can-be-used-600nw-1887496465.jpg"
-          alt="ChatterHub Logo"
+          alt="ChtrHub Logo"
           width={40}
           height={40}
           className={styles.logo}
         />
-        <span className={styles.appName}>ChatterHub</span>
+        <span className={styles.appName}>ChtrHub</span>
       </div>
       <div className={styles.navRight}>
         {isLoggedIn ? (

@@ -5,7 +5,7 @@ export default function Main() {
   return (
     <main className={styles.mainContent}>
       <div className={styles.titleSection}>
-        <h1 className={styles.mainTitle}>Welcome to ChatterHub</h1>
+        <h1 className={styles.mainTitle}>Welcome to <span>ChtrHub</span></h1>
         <p className={styles.mainDescription}>
           Connect with your family and friends...
         </p>
@@ -15,7 +15,7 @@ export default function Main() {
           <div className={styles.featureIcon}>💬</div>
           <h3>Live Chat</h3>
           <p>
-            Send and receive messages instantly using a fast messaging system.
+            Send and receive messages instantly through web socket server.
           </p>
         </div>
 
@@ -23,7 +23,7 @@ export default function Main() {
           <div className={styles.featureIcon}>🆔</div>
           <h3>Unique Room IDs</h3>
           <p>
-            Every chat has its own special link, so your messages stay organized
+            Every chat has its own special id, so your messages stay organized
             and private.
           </p>
         </div>

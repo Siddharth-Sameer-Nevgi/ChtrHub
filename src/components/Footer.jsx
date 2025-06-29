@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContent}>
-        <p>© 2025 ChatterHub. All rights reserved.</p>
+        <p>© 2025 ChtrHub. All rights reserved.</p>
         <p className={styles.credits}>Developed by Siddharth Sameer Nevgi</p>
         <div className={styles.socialLinks}>
           <a
