@@ -449,7 +449,7 @@
 .roomBadge {
   display: inline-block;
   background: #48bb78;
-  color: white;
+  color: black;
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;
   border-radius: 9999px;
