@@ -57,6 +57,20 @@ export default function RoomPage({ params }) {
       ]);
     });
 
+    socket.on("messageDeleted", ({ messageId }) => {
+      setMessages((prevMessages) =>
+        prevMessages.filter((msg) => msg._id !== messageId)
+      );
+      toast("Message deleted", {
+        icon: "🗑️",
+        style: {
+          borderRadius: "8px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    });
+
     return () => {
       socket.disconnect();
     };
@@ -77,6 +91,40 @@ export default function RoomPage({ params }) {
     });
 
     setInput("");
+  };
+
+  const deleteMessageHandler = async (messageId) => {
+    try {
+      await axios.delete(`/api/users/room?roomID=${id}&messageId=${messageId}`);
+      
+      // Emit delete event to other users
+      socket.emit("deleteMessage", {
+        roomID: id,
+        messageId,
+      });
+      
+      // Remove message locally
+      setMessages((prevMessages) =>
+        prevMessages.filter((msg) => msg._id !== messageId)
+      );
+      
+      toast.success("Message deleted", {
+        style: {
+          borderRadius: "8px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
+    } catch (error) {
+      toast.error("Failed to delete message", {
+        style: {
+          borderRadius: "8px",
+          background: "#ff4444",
+          color: "#fff",
+        },
+      });
+      console.error("Error deleting message:", error);
+    }
   };
 
   useEffect(() => {
@@ -116,7 +164,7 @@ export default function RoomPage({ params }) {
         ) : Array.isArray(messages) && messages.length > 0 ? (
           messages.map((message, index) => (
             <div
-              key={index}
+              key={message._id || index}
               className={`${styles.messageBubble} ${
                 message.sender === username
                   ? styles.sentMessage
@@ -127,16 +175,27 @@ export default function RoomPage({ params }) {
                 <span className={styles.senderName}>{message.sender}</span>
               )}
               <div className={styles.messageContent}>{message.content}</div>
-              <div className={styles.messageTime}>
-                {message.timestamp
-                  ? new Date(message.timestamp).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  : new Date().toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+              <div className={styles.messageActions}>
+                <div className={styles.messageTime}>
+                  {message.timestamp
+                    ? new Date(message.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : new Date().toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                </div>
+                {message.sender === username && message._id && (
+                  <button
+                    onClick={() => deleteMessageHandler(message._id)}
+                    className={styles.deleteButton}
+                    title="Delete message"
+                  >
+                    🗑️
+                  </button>
+                )}
               </div>
             </div>
           ))

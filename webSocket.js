@@ -42,6 +42,10 @@ io.on("connection", (socket) => {
     io.to(roomID).emit("receiveMessage", { sender, message });
   });
 
+  socket.on("deleteMessage", ({ roomID, messageId }) => {
+    io.to(roomID).emit("messageDeleted", { messageId });
+  });
+
   socket.on("disconnect", () => {
     const { roomID, username } = socket;
     if (roomID && username) {

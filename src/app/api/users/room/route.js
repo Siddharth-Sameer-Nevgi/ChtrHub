@@ -64,3 +64,58 @@ export async function POST(req = NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function DELETE(req = NextRequest) {
+  try {
+    const token = req.cookies.get("token")?.value || "";
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const tokenData = jwt.verify(token, process.env.SESSION_SECRET);
+    const user = await User.findById(tokenData.id).select("username");
+
+    const { searchParams } = new URL(req.url);
+    const roomID = searchParams.get("roomID");
+    const messageId = searchParams.get("messageId");
+
+    if (!roomID || !messageId) {
+      return NextResponse.json(
+        { error: "Room ID and message ID are required" },
+        { status: 400 }
+      );
+    }
+
+    // Find the room and check if the message belongs to the user
+    const room = await Room.findOne({ roomID });
+    if (!room) {
+      return NextResponse.json({ error: "Room not found" }, { status: 404 });
+    }
+
+    const message = room.messages.id(messageId);
+    if (!message) {
+      return NextResponse.json({ error: "Message not found" }, { status: 404 });
+    }
+
+    // Check if the user is the sender of the message
+    if (message.sender !== user.username) {
+      return NextResponse.json(
+        { error: "You can only delete your own messages" },
+        { status: 403 }
+      );
+    }
+
+    // Remove the message
+    await Room.findOneAndUpdate(
+      { roomID },
+      { $pull: { messages: { _id: messageId } } }
+    );
+
+    return NextResponse.json(
+      { message: "Message deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
